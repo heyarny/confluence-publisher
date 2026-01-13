@@ -348,9 +348,9 @@ jobs:
         run: rm -rf ~/.m2/repository/org/sahli/asciidoc/confluence/publisher
 
   publish-documentation:
-    name: publish documentation (master / tag)
+    name: publish documentation (tag)
     runs-on: ubuntu-latest
-    if: (github.ref_type == 'branch' && github.ref_name == 'master') || github.ref_type == 'tag'
+    if: github.ref_type == 'tag'
     needs:
       - deploy-docker
     permissions:
@@ -367,14 +367,12 @@ jobs:
           cache: maven
 
       - name: set version (tag build only)
-        if: github.ref_type == 'tag'
         run: ./mvnw versions:set -DnewVersion=${GITHUB_REF_NAME} -nsu
 
       - name: install prerequisites
         run: sudo apt-get update -y && sudo apt-get install -y graphviz
 
       - name: publish release documentation to confluence (tag build only)
-        if: github.ref_type == 'tag'
         env:
           CONFLUENCE_USERNAME: ${{ secrets.CONFLUENCE_USERNAME }}
           CONFLUENCE_PASSWORD: ${{ secrets.CONFLUENCE_PASSWORD }}
