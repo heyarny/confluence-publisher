@@ -322,7 +322,11 @@ jobs:
         run: ./mvnw -B -DskipTests=true clean install -nsu
 
       - name: determine docker image tag
-        run: echo "DOCKER_IMAGE_TAG=$(./mvnw -q org.apache.maven.plugins:maven-help-plugin:3.4.0:evaluate -Dexpression=project.version -DforceStdout)" >> $GITHUB_ENV
+        run: |
+          TAG=$(./mvnw -q org.apache.maven.plugins:maven-help-plugin:3.4.0:evaluate -Dexpression=project.version -DforceStdout)
+          echo "running within \"$GITHUB_REF_NAME\" branch or tag"
+          echo "DOCKER_IMAGE_TAG is: $TAG"
+          echo "DOCKER_IMAGE_TAG=$TAG" >> "$GITHUB_ENV"
 
       - name: set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -339,8 +343,8 @@ jobs:
       - name: build and push multi-arch image to Docker Hub (master or tag builds only)
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: asciidoc-confluence-publisher-docker/Dockerfile
+          context: asciidoc-confluence-publisher-docker
+          file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
