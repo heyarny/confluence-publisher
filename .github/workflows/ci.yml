@@ -344,7 +344,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: asciidoc-confluence-publisher-docker
-          file: ./Dockerfile
+          file: asciidoc-confluence-publisher-docker/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
