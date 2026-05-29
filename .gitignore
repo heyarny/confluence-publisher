@@ -13,3 +13,6 @@ target/
 .settings
 .classpath
 .factorypath
+.DS_Store
+.codex/
+.devcontainer/devcontainer-lock.json
